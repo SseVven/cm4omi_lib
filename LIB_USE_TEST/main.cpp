@@ -10,25 +10,6 @@
 #include "../Reconstruction/leastsq.h"
 #include "../Reconstruction/reconstructor.h"
 
-double getRandom(double a, double b) {
-	// 定义随机数范围 {a, b}
-	// 随机数引擎：使用 Mersenne Twister 算法
-	std::random_device rd;  // 用于生成随机种子
-	std::mt19937 gen(rd()); // 初始化随机数引擎
-	// 定义均匀分布
-	std::uniform_real_distribution<double> dist(a, b);
-	double random_value = dist(gen); // 生成随机数
-	return random_value;
-}
-
-std::vector<double> getRandomPoint(Point center, double radius) {
-	double rph = getRandom(0, M_PI);
-	double theta = getRandom(0, 2 * M_PI);
-	return {center.x + radius * sin(rph) * cos(theta), 
-		center.y + radius * sin(rph) * sin(theta), 
-		center.z + radius * cos(rph)};
-}
-
 int main() {
 	// 模型原始阶段
 	Sphere sphere_standard(Point(20, 30, 40), 20);
