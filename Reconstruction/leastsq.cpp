@@ -154,6 +154,18 @@ std::vector<double> cylinderFit(std::vector<double> parmas, std::vector<std::vec
     return res;
 }
 
+// params: 7位，前三位锥点坐标；中三位轴向方向；后一位锥角张角（弧度信息，全张角）
 std::vector<double> coneFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
-	return {};
+    std::vector<double> res;
+    Point vertex = Point(parmas[0], parmas[1], parmas[2]);
+    Vec axis = GEOMETRY::Geom_UnitVec(Vec(parmas[3], parmas[4], parmas[5]));
+    double angle = parmas[6];
+    for (auto& point : data) {
+        Point p(point[0], point[1], point[2]);
+        double NP = GEOMETRY::Geom_Point2LineDistance(p, axis, vertex);
+        Point N = GEOMETRY::Geom_PointProjLine(p, axis, vertex);
+        double NP_EXP = tan(angle / 2) * GEOMETRY::Geom_PosDistance(vertex, N);
+        res.push_back(NP_EXP - NP);
+    }
+    return res;
 }

@@ -63,6 +63,7 @@ std::vector<std::vector<double>> reconstructor::planeComp(std::vector<double> it
 	Point planeVec(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
 	for (auto& point : data) {
 		Point p(point[0], point[1], point[2]);
+		// 没写好，万一平面的法向量不指向探头方向怎么办（待改进）
 		Vec compVec = GEOMETRY::Geom_UnitVec(Point(0,0,0) - planeVec);
 		Point np = p + compVec * PROBE_RADIUS;
 		std::vector<double> tmp({ np.x, np.y, np.z });
@@ -98,7 +99,23 @@ std::vector<std::vector<double>> reconstructor::cylinderComp(std::vector<double>
 	return res;
 }
 
+// 原理公式见preobe measure ppt
 std::vector<std::vector<double>> reconstructor::coneComp(std::vector<double> iter_thetas) {
-	return std::vector<std::vector<double>>();
-
+	std::vector<std::vector<double>> res;
+	Point vertex = Point(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
+	Vec axis = GEOMETRY::Geom_UnitVec(Vec(iter_thetas[3], iter_thetas[4], iter_thetas[5]));
+	double angle = iter_thetas[6];
+	for (auto& point : data) {
+		Point p(point[0], point[1], point[2]);
+		Point N = GEOMETRY::Geom_PointProjLine(p, axis, vertex);
+		double Nc = tan(angle / 2) * GEOMETRY::Geom_PosDistance(vertex, N);
+		Point c = N + GEOMETRY::Geom_UnitVec(p - N) * Nc;
+		double cv = tan(angle / 2) * PROBE_RADIUS;
+		Point v = c + GEOMETRY::Geom_UnitVec(c - vertex) * cv;
+		Vec compVec = GEOMETRY::Geom_UnitVec(v - p);
+		Point np = p + compVec * PROBE_RADIUS;
+		std::vector<double> tmp({ np.x, np.y, np.z });
+		res.emplace_back(tmp);
+	}
+	return res;
 }

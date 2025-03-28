@@ -7,7 +7,7 @@
 #include <vector>
 
 struct Vec
-{
+{ 
 	double x, y, z;
 	Vec(double x, double y, double z) :x(x), y(y), z(z) {}
 	Vec() :x(0), y(0), z(0) {}
