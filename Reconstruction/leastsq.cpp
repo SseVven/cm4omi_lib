@@ -139,8 +139,19 @@ std::vector<double> sphereFit(std::vector<double> parmas, std::vector<std::vecto
 	return res;
 }
 
+
+// params: 七位，轴线上一点（3），轴线方向（3），半径（1）
 std::vector<double> cylinderFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
-	return {};
+    //计算点到圆柱轴线的距离
+    std::vector<double> res;
+    Point fp(parmas[0], parmas[1], parmas[2]);
+    Vec vec(parmas[3], parmas[4], parmas[5]);
+    double radius = parmas[6];
+    for (auto& point : data) {
+        Point p(point[0], point[1], point[2]);
+        res.push_back(radius - GEOMETRY::Geom_Point2LineDistance(p, vec, fp));
+    }
+    return res;
 }
 
 std::vector<double> coneFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
