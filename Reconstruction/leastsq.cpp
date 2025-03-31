@@ -27,7 +27,7 @@ leastsq::leastsq(Model::ModelType modeltype, std::vector<std::vector<double>> da
 		m_func = coneFit;
 	}
 	else {
-		m_func = planeFit;
+		m_func = coneFit;
 	}
 }
 leastsq::~leastsq() {
@@ -139,7 +139,6 @@ std::vector<double> sphereFit(std::vector<double> parmas, std::vector<std::vecto
 	return res;
 }
 
-
 // params: 七位，轴线上一点（3），轴线方向（3），半径（1）
 std::vector<double> cylinderFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
     //计算点到圆柱轴线的距离
@@ -165,7 +164,7 @@ std::vector<double> coneFit(std::vector<double> parmas, std::vector<std::vector<
         double NP = GEOMETRY::Geom_Point2LineDistance(p, axis, vertex);
         Point N = GEOMETRY::Geom_PointProjLine(p, axis, vertex);
         double NP_EXP = tan(angle / 2) * GEOMETRY::Geom_PosDistance(vertex, N);
-        res.push_back(NP_EXP - NP);
+        res.push_back(abs(NP_EXP - NP));
     }
     return res;
 }

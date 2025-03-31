@@ -22,7 +22,7 @@ std::vector<double> reconstructor::fit(double tol, int maxIter) {
 		// 半径补偿+拟合
 		leastsq lq(mtype, radiusCompensate(iter_thetas, mtype), iter_thetas);
 		// 新参数
-		iter_thetas = lq.fit();
+		iter_thetas = lq.fit(tol);
 		// 判断参数的变化容差，是否收敛
 		int len = iter_thetas.size();
 		bool flag = true;
@@ -117,5 +117,6 @@ std::vector<std::vector<double>> reconstructor::coneComp(std::vector<double> ite
 		std::vector<double> tmp({ np.x, np.y, np.z });
 		res.emplace_back(tmp);
 	}
-	return res;
+	return data;
+	//return res;
 }

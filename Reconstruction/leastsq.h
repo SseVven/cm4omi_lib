@@ -3,9 +3,14 @@
 #include "../Model/Model.h"
 
 // 残差函数，输入预计参数和拟合数据
+#ifdef LEASTSQ_LIBRARY_EXPORTS
+#define LEASTSQ_LIBRARY_API __declspec(dllexport)
+#else
+#define LEASTSQ_LIBRARY_API __declspec(dllimport)
+#endif
 using residuals = std::vector<double>(*)(std::vector<double>, std::vector<std::vector<double>>);
 
-class leastsq
+class LEASTSQ_LIBRARY_API leastsq
 {
 public:
 	leastsq(residuals, std::vector<std::vector<double>>, std::vector<double>);
@@ -18,5 +23,4 @@ private:
 	std::vector<std::vector<double>> m_data;
 	std::vector<double> m_params;
 };
-//int maxIter = 100;
 

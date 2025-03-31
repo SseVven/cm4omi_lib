@@ -1,7 +1,12 @@
 #pragma once
 #include "Model.h"
+#ifdef CONE_LIBRARY_EXPORTS
+#define CONE_LIBRARY_API __declspec(dllexport)
+#else
+#define CONE_LIBRARY_API __declspec(dllimport)
+#endif
 
-class Cone : public Model
+class CONE_LIBRARY_API Cone : public Model
 {
 public:
 	Cone();

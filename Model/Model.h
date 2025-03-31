@@ -3,10 +3,16 @@
 #include <vector>
 #include <string>
 
+#ifdef MODEL_LIBRARY_EXPORTS
+#define MODEL_LIBRARY_API __declspec(dllexport)
+#else
+#define MODEL_LIBRARY_API __declspec(dllimport)
+#endif
+
 constexpr auto MODEL_LENGTH_UNIT = "mm";
 constexpr auto PROBE_RADIUS = 2.5;
 
-class Model
+class MODEL_LIBRARY_API Model
 {
 public:
 	enum ModelType

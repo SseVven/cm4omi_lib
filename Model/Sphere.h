@@ -1,7 +1,12 @@
 #pragma once
 #include "Model.h"
+#ifdef SPHERE_LIBRARY_EXPORTS
+#define SPHERE_LIBRARY_API __declspec(dllexport)
+#else
+#define SPHERE_LIBRARY_API __declspec(dllimport)
+#endif
 
-class Sphere : public Model
+class SPHERE_LIBRARY_API Sphere : public Model
 {
 public:
 	Sphere();

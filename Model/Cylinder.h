@@ -1,7 +1,12 @@
 #pragma once
 #include "Model.h"
+#ifdef CYLINDER_LIBRARY_EXPORTS
+#define CYLINDER_LIBRARY_API __declspec(dllexport)
+#else
+#define CYLINDER_LIBRARY_API __declspec(dllimport)
+#endif
 
-class Cylinder : public Model
+class CYLINDER_LIBRARY_API Cylinder : public Model
 {
 public:
 	Cylinder();

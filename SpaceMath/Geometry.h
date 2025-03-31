@@ -1,10 +1,15 @@
 //Geometry.h
 #pragma once
-#ifndef _GEOMETRY_H_
-#define _GEOMETRY_H_
+#pragma warning(default:4716)
+#ifdef SPACE_MATH_LIBRARY_EXPORTS
+#define Space_Math_LIBRARY_API __declspec(dllexport)
+#else
+#define Space_Math_LIBRARY_API __declspec(dllimport)
+#endif
+
 #include <iostream>
-#define	M_PI	3.14159265358979323846
 #include <vector>
+#define	M_PI 3.14159265358979323846
 
 struct Vec
 { 
@@ -190,33 +195,31 @@ struct Matrix
 
 namespace GEOMETRY
 {
-	void PrintHello();  //测试函数
+	extern Space_Math_LIBRARY_API void PrintHello();  //测试函数
 
-	double Geom_PosDistance(const Point& point, const Point&);
+	extern Space_Math_LIBRARY_API double Geom_PosDistance(const Point& point, const Point&);
 
-	double Geom_VecInnerAngle(const Vec&, const Vec&);
+	extern Space_Math_LIBRARY_API double Geom_VecInnerAngle(const Vec&, const Vec&);
 
-	Point Geom_PointProjLine(const Point& point, const Vec&, const Point&);
+	extern Space_Math_LIBRARY_API Point Geom_PointProjLine(const Point& point, const Vec&, const Point&);
 
-	Point Geom_PointProjPlane(const Point& point, const Vec&, const Point&);
+	extern Space_Math_LIBRARY_API Point Geom_PointProjPlane(const Point& point, const Vec&, const Point&);
 
-	double Geom_Point2LineDistance(const Point& point, const Vec&, const Point&);
+	extern Space_Math_LIBRARY_API double Geom_Point2LineDistance(const Point& point, const Vec&, const Point&);
 
-	double Geom_Point2PlaneDistance(const Point& point, const Vec&, const Point&);
+	extern Space_Math_LIBRARY_API double Geom_Point2PlaneDistance(const Point& point, const Vec&, const Point&);
 
-	Vec Geom_UnitVec(const Vec&);
+	extern Space_Math_LIBRARY_API Vec Geom_UnitVec(const Vec&);
 
-	double Geom_VecLen(const Vec&) ;
+	extern Space_Math_LIBRARY_API double Geom_VecLen(const Vec&) ;
 
 	inline double Geom_Rad2Degree(double rad) { return rad / M_PI * 180; }
 	inline double Geom_Degree2Rad(double deg) { return deg * M_PI / 180; }
 
 	// 空间几何变换函数
-	Vec Geom_VerticeVec(const Vec& vec);
+	extern Space_Math_LIBRARY_API Vec Geom_VerticeVec(const Vec& vec);
 
-	Point Geom_RotateAroundAxis(const Point& point, const Vec&, const Point&, double);
+	extern Space_Math_LIBRARY_API Point Geom_RotateAroundAxis(const Point& point, const Vec&, const Point&, double);
 
 	//Vec Geom_Rotate
 }
-
-#endif

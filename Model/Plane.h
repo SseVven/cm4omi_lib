@@ -1,7 +1,13 @@
 #pragma once
 #include "Model.h"
 
-class Plane: public Model
+#ifdef PLANE_LIBRARY_EXPORTS
+#define PLANE_LIBRARY_API __declspec(dllexport)
+#else
+#define PLANE_LIBRARY_API __declspec(dllimport)
+#endif
+
+class PLANE_LIBRARY_API Plane: public Model
 {
 public:
 	Plane();
