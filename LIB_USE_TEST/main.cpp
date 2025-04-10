@@ -11,13 +11,13 @@
 #include "../Reconstruction/reconstructor.h"
 
 double getRandom(double a, double b) {
-	// ¶¨ÒåËæ»úÊı·¶Î§ {a, b}
-	// Ëæ»úÊıÒıÇæ£ºÊ¹ÓÃ Mersenne Twister Ëã·¨
-	std::random_device rd;  // ÓÃÓÚÉú³ÉËæ»úÖÖ×Ó
-	std::mt19937 gen(rd()); // ³õÊ¼»¯Ëæ»úÊıÒıÇæ
-	// ¶¨Òå¾ùÔÈ·Ö²¼
+	// å®šä¹‰éšæœºæ•°èŒƒå›´ {a, b}
+	// éšæœºæ•°å¼•æ“ï¼šä½¿ç”¨ Mersenne Twister ç®—æ³•
+	std::random_device rd;  // ç”¨äºç”Ÿæˆéšæœºç§å­
+	std::mt19937 gen(rd()); // åˆå§‹åŒ–éšæœºæ•°å¼•æ“
+	// å®šä¹‰å‡åŒ€åˆ†å¸ƒ
 	std::uniform_real_distribution<double> dist(a, b);
-	double random_value = dist(gen); // Éú³ÉËæ»úÊı
+	double random_value = dist(gen); // ç”Ÿæˆéšæœºæ•°
 	return random_value;
 }
 
@@ -30,18 +30,18 @@ std::vector<double> getRandomPoint(Point center, double radius) {
 }
 
 int main() {
-	//// Ä£ĞÍÔ­Ê¼½×¶Î
+	//// æ¨¡å‹åŸå§‹é˜¶æ®µ
 	//Sphere sphere_standard(Point(20, 30, 40), 20);
 	//Sphere sphere_actual(Point(19.99807462, 30.00129321, 41.0002376), 21.000190102613473);
 	////std::cout << sphere_standard.modelErrorStr(sphere_actual) << "\n";
 
-	//// ²ÉÑù¡¾¸ù¾İCADÎÄ¼ş£¬Éè¼Æ²ÉÑùµã£¬Ö¸µ¼Ì½Í·½øĞĞ²âÁ¿¡¿
+	//// é‡‡æ ·ã€æ ¹æ®CADæ–‡ä»¶ï¼Œè®¾è®¡é‡‡æ ·ç‚¹ï¼ŒæŒ‡å¯¼æ¢å¤´è¿›è¡Œæµ‹é‡ã€‘
 	//SphereSampler sampler = SphereSampler();
 	//std::vector<Point> sampleNodes = sampler.sample(sphere_standard, 9, Vec(1,0,0), M_PI / 3);
-	//// ²âÁ¿
+	//// æµ‹é‡
 
-	//// ÄâºÏ
-	//// ÊäÈëÄâºÏÀàĞÍ£¬ÄâºÏµÄÊı¾İµã£¬ºÍ³õÊ¼µÄÔ¤²â²ÎÊı
+	//// æ‹Ÿåˆ
+	//// è¾“å…¥æ‹Ÿåˆç±»å‹ï¼Œæ‹Ÿåˆçš„æ•°æ®ç‚¹ï¼Œå’Œåˆå§‹çš„é¢„æµ‹å‚æ•°
 	//std::vector<std::vector<double>> data = { 
 	//	{13.90945534, 40.5491328 , 61.09826561},
 	//	{13.90974565, 19.45137004, 61.09725992},
@@ -64,7 +64,7 @@ int main() {
 	//std::cout << "\nend\n";
 	//return 0;
 
-	/*************************Æ½Ãæ***************************/
+	/*************************å¹³é¢***************************/
 	//Plane plane_standard(Vec(0, 0, 1), Point(20, 30, 40));
 	//Plane plane_actual(Vec(0.01293751, -0.0042886, 0.99990711), Point(20.00050656, 29.99811065, 40.00075931));
 
@@ -88,9 +88,9 @@ int main() {
 	//}
 	//std::cout << "\nend\n";
 	//return 0;
-	/*************************Æ½Ãæ***************************/
+	/*************************å¹³é¢***************************/
 
-	/*************************Ô²Öù***************************/
+	/*************************åœ†æŸ±***************************/
 	//Cylinder cylinder_standard(Point(20, 40, 30),Vec(0, 0, 1),20);
 	//Cylinder cylinder_actual(Point(20.00003046,39.99976466,30.00097144),Vec(2.78216323e-03,- 7.11886407e-04,9.99995876e-01), 19.998);
 
@@ -114,19 +114,19 @@ int main() {
 	//}
 	//std::cout << "\nend\n";
 	//return 0;
-	/*************************Ô²Öù***************************/
+	/*************************åœ†æŸ±***************************/
 
 	/*************************cone***************************/
 	double s_height = 40;
 	Vec s_vec = Vec(0, 0, 1);
-	Point s_bp = Point(20, 40, 30); // ±ê³ÆµÄÔ²×¶µ×ÃæÖĞĞÄ
-	Point s_tp = s_bp + s_vec * s_height; // ±ê³ÆµÄÔ²×¶×¶µã
+	Point s_bp = Point(20, 40, 30); // æ ‡ç§°çš„åœ†é”¥åº•é¢ä¸­å¿ƒ
+	Point s_tp = s_bp + (s_vec * s_height); // æ ‡ç§°çš„åœ†é”¥é”¥ç‚¹
 	Cone cone_standard(s_tp, s_vec, 0.927295218001612);
-	// Êµ¼Êcone²ÎÊı²»²ÎÓëÔËËã£¬Ö»¸øÎÒÃÇÒ»¸öÄâºÏºóµÄ¶Ô±È²Î¿´
+	// å®é™…coneå‚æ•°ä¸å‚ä¸è¿ç®—ï¼Œåªç»™æˆ‘ä»¬ä¸€ä¸ªæ‹Ÿåˆåçš„å¯¹æ¯”å‚çœ‹
 	double a_height = 40;
 	Vec a_vec = Vec(0.010156064710623948, -0.004186331321546835, 0.9999396626695332);
 	Point a_bp = Point(20.000319169987822, 40.00045980044738, 29.99917131787309);
-	Point a_tp = a_bp + a_vec * a_height;
+	Point a_tp = a_bp + (a_vec * a_height);
 	Cone cone_actual(a_tp, a_vec, 0.929294217835695);
 
 	std::vector<std::vector<double>> data = {
@@ -146,6 +146,12 @@ int main() {
 	reconstructor rc(&cone_standard, data);
 	std::vector<double> thetas = rc.fit();
 	for (double x : thetas) {
+		std::cout << x << " ";
+	}
+
+	std::vector<double> a_thetas = cone_actual.thetas();
+	std::cout << "\n\na_thetas" << ": \n";
+	for (double x : a_thetas) {
 		std::cout << x << " ";
 	}
 	std::cout << "\nend\n";

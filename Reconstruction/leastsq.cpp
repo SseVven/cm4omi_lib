@@ -36,47 +36,47 @@ leastsq::~leastsq() {
 // leastsq python
 // deving
 std::vector<double> leastsq::fit(double tol, int maxIter) {
-    double lambda = 0.01; // ³õÊ¼×èÄáÒò×Ó
-    size_t n = m_params.size(); // ²ÎÊı¸öÊı
-    size_t m = m_data.size();  // Êı¾İµã¸öÊı
+    double lambda = 0.01; // åˆå§‹é˜»å°¼å› å­
+    size_t n = m_params.size(); // å‚æ•°ä¸ªæ•°
+    size_t m = m_data.size();  // æ•°æ®ç‚¹ä¸ªæ•°
 
     for (int iter = 0; iter < maxIter; ++iter) {
-        // ¼ÆËã²Ğ²î
+        // è®¡ç®—æ®‹å·®
         Vector r = m_func(m_params, m_data);
-        Matrix J(m, Vector(n)); // ÑÅ¿É±È¾ØÕó
+        Matrix J(m, Vector(n)); // é›…å¯æ¯”çŸ©é˜µ
 
-        // ÊıÖµ·¨¼ÆËãÑÅ¿É±È¾ØÕó
-        double eps = 1e-8; // Î¢Ğ¡ÔöÁ¿
+        // æ•°å€¼æ³•è®¡ç®—é›…å¯æ¯”çŸ©é˜µ
+        double eps = 1e-8; // å¾®å°å¢é‡
         for (size_t j = 0; j < n; ++j) {
             Vector thetaPlus = m_params;
             thetaPlus[j] += eps;
             Vector rPlus = m_func(thetaPlus, m_data);
 
             for (size_t i = 0; i < m; ++i) {
-                J[i][j] = (rPlus[i] - r[i]) / eps; // ÓĞÏŞ²î·Ö·¨¼ÆËãÆ«µ¼Êı
+                J[i][j] = (rPlus[i] - r[i]) / eps; // æœ‰é™å·®åˆ†æ³•è®¡ç®—åå¯¼æ•°
             }
         }
 
-        // ¼ÆËã¸üĞÂ²½³¤
+        // è®¡ç®—æ›´æ–°æ­¥é•¿
         Matrix Jt = J.transpose();
         J.transpose();
         Matrix A = Jt.matmul(J);
         for (size_t i = 0; i < n; ++i) {
-            A[i][i] += lambda; // Ìí¼Ó×èÄáÒò×Ó
+            A[i][i] += lambda; // æ·»åŠ é˜»å°¼å› å­
         }
         Vector b = Jt.matvecmul(r);
         for (size_t i = 0; i < b.size(); ++i) {
-            b[i] = -b[i]; // È¡¸ººÅ
+            b[i] = -b[i]; // å–è´Ÿå·
         }
         Vector dTheta = A.solveLinearSystem(b);
 
-        // ¸üĞÂ²ÎÊı
+        // æ›´æ–°å‚æ•°
         Vector thetaNew(n);
         for (size_t j = 0; j < n; ++j) {
             thetaNew[j] = m_params[j] + dTheta[j];
         }
 
-        // ¼ì²éÊÕÁ²Ìõ¼ş
+        // æ£€æŸ¥æ”¶æ•›æ¡ä»¶
         double norm = 0.0;
         for (double val : dTheta) {
             norm += val * val;
@@ -87,7 +87,7 @@ std::vector<double> leastsq::fit(double tol, int maxIter) {
             return thetaNew;
         }
 
-        // ¸üĞÂ×èÄáÒò×Ó
+        // æ›´æ–°é˜»å°¼å› å­
         Vector rNew = m_func(thetaNew, m_data);
         double rNorm = 0.0, rNewNorm = 0.0;
         for (double val : r) rNorm += val * val;
@@ -96,11 +96,11 @@ std::vector<double> leastsq::fit(double tol, int maxIter) {
         rNewNorm = sqrt(rNewNorm);
 
         if (rNewNorm < rNorm) {
-            lambda /= 10; // ¼õĞ¡×èÄáÒò×Ó
+            lambda /= 10; // å‡å°é˜»å°¼å› å­
             m_params = thetaNew;
         }
         else {
-            lambda *= 10; // Ôö´ó×èÄáÒò×Ó
+            lambda *= 10; // å¢å¤§é˜»å°¼å› å­
         }
     }
 
@@ -109,12 +109,12 @@ std::vector<double> leastsq::fit(double tol, int maxIter) {
 }
 
 // unchecked
-// params: 6Î»£¬Ç°ÈıÎ»·¨Ïò£¬ºóÈıÎ»Æ½ÃæÉÏµã
-// data: ÈıÎ¬µãÊı×é
+// params: 6ä½ï¼Œå‰ä¸‰ä½æ³•å‘ï¼Œåä¸‰ä½å¹³é¢ä¸Šç‚¹
+// data: ä¸‰ç»´ç‚¹æ•°ç»„
 std::vector<double> planeFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
 	// 0 = A * (x-x0) + B*(y-y0) + C*(z-z0) = Ax+By+Cz -Ax0 -By0 -Cz0
 	// Ax + By + Cz = Ax0 + By0 + Cz0 = D
-	// ¼ÆËãµãµ½Æ½ÃæµÄ¾àÀë
+	// è®¡ç®—ç‚¹åˆ°å¹³é¢çš„è·ç¦»
 	std::vector<double> res;
 	Vec vec(parmas[0], parmas[1], parmas[2]);
 	Point fp(parmas[3], parmas[4], parmas[5]);
@@ -126,7 +126,7 @@ std::vector<double> planeFit(std::vector<double> parmas, std::vector<std::vector
 }
 
 // CHECK DONE!
-// params: ËÄÎ»£¬Ç°ÈıÎ»ÇòĞÄÎ»ÖÃ£¬µÚËÄÎ»Çò°ë¾¶
+// params: å››ä½ï¼Œå‰ä¸‰ä½çƒå¿ƒä½ç½®ï¼Œç¬¬å››ä½çƒåŠå¾„
 std::vector<double> sphereFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
 	std::vector<double> res;
 	double radius = parmas[3];
@@ -139,9 +139,9 @@ std::vector<double> sphereFit(std::vector<double> parmas, std::vector<std::vecto
 	return res;
 }
 
-// params: ÆßÎ»£¬ÖáÏßÉÏÒ»µã£¨3£©£¬ÖáÏß·½Ïò£¨3£©£¬°ë¾¶£¨1£©
+// params: ä¸ƒä½ï¼Œè½´çº¿ä¸Šä¸€ç‚¹ï¼ˆ3ï¼‰ï¼Œè½´çº¿æ–¹å‘ï¼ˆ3ï¼‰ï¼ŒåŠå¾„ï¼ˆ1ï¼‰
 std::vector<double> cylinderFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
-    //¼ÆËãµãµ½Ô²ÖùÖáÏßµÄ¾àÀë
+    //è®¡ç®—ç‚¹åˆ°åœ†æŸ±è½´çº¿çš„è·ç¦»
     std::vector<double> res;
     Point fp(parmas[0], parmas[1], parmas[2]);
     Vec vec(parmas[3], parmas[4], parmas[5]);
@@ -153,7 +153,7 @@ std::vector<double> cylinderFit(std::vector<double> parmas, std::vector<std::vec
     return res;
 }
 
-// params: 7Î»£¬Ç°ÈıÎ»×¶µã×ø±ê£»ÖĞÈıÎ»ÖáÏò·½Ïò£»ºóÒ»Î»×¶½ÇÕÅ½Ç£¨»¡¶ÈĞÅÏ¢£¬È«ÕÅ½Ç£©
+// params: 7ä½ï¼Œå‰ä¸‰ä½é”¥ç‚¹åæ ‡ï¼›ä¸­ä¸‰ä½è½´å‘æ–¹å‘ï¼›åä¸€ä½é”¥è§’å¼ è§’ï¼ˆå¼§åº¦ä¿¡æ¯ï¼Œå…¨å¼ è§’ï¼‰
 std::vector<double> coneFit(std::vector<double> parmas, std::vector<std::vector<double>> data) {
     std::vector<double> res;
     Point vertex = Point(parmas[0], parmas[1], parmas[2]);

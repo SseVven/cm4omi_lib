@@ -13,17 +13,17 @@ reconstructor::~reconstructor() {
 
 std::vector<double> reconstructor::fit(double tol, int maxIter) {
 	std::cout << "1" << std::endl;
-	// ¸ù¾İÄ£ĞÍµÄÀàĞÍÀ´µü´úÄâºÏ+°ë¾¶²¹³¥
+	// æ ¹æ®æ¨¡å‹çš„ç±»å‹æ¥è¿­ä»£æ‹Ÿåˆ+åŠå¾„è¡¥å¿
 	Model::ModelType mtype = model->modelType();
 	std::vector<double> iter_thetas = model->thetas();
 	std::vector<std::vector<double>> iter_process = { iter_thetas };
 	for (int i = 0; i < maxIter; i++) {
 		std::cout << "iter " << i + 1 << "\t";
-		// °ë¾¶²¹³¥+ÄâºÏ
+		// åŠå¾„è¡¥å¿+æ‹Ÿåˆ
 		leastsq lq(mtype, radiusCompensate(iter_thetas, mtype), iter_thetas);
-		// ĞÂ²ÎÊı
+		// æ–°å‚æ•°
 		iter_thetas = lq.fit(tol);
-		// ÅĞ¶Ï²ÎÊıµÄ±ä»¯Èİ²î£¬ÊÇ·ñÊÕÁ²
+		// åˆ¤æ–­å‚æ•°çš„å˜åŒ–å®¹å·®ï¼Œæ˜¯å¦æ”¶æ•›
 		int len = iter_thetas.size();
 		bool flag = true;
 		for (int j = 0; j < len; j++) {
@@ -63,7 +63,7 @@ std::vector<std::vector<double>> reconstructor::planeComp(std::vector<double> it
 	Point planeVec(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
 	for (auto& point : data) {
 		Point p(point[0], point[1], point[2]);
-		// Ã»Ğ´ºÃ£¬ÍòÒ»Æ½ÃæµÄ·¨ÏòÁ¿²»Ö¸ÏòÌ½Í··½ÏòÔõÃ´°ì£¨´ı¸Ä½ø£©
+		// æ²¡å†™å¥½ï¼Œä¸‡ä¸€å¹³é¢çš„æ³•å‘é‡ä¸æŒ‡å‘æ¢å¤´æ–¹å‘æ€ä¹ˆåŠï¼ˆå¾…æ”¹è¿›ï¼‰
 		Vec compVec = GEOMETRY::Geom_UnitVec(Point(0,0,0) - planeVec);
 		Point np = p + compVec * PROBE_RADIUS;
 		std::vector<double> tmp({ np.x, np.y, np.z });
@@ -90,8 +90,8 @@ std::vector<std::vector<double>> reconstructor::cylinderComp(std::vector<double>
 	double radius = iter_thetas[6];
 	for (auto& point : data) {
 		Point p(point[0], point[1], point[2]);
-		Point proj_p2axis(GEOMETRY::Geom_PointProjLine(p, axis, pointOnAxis));	//Êı¾İµãÍ¶Ó°µ½ÖáÏßÉÏ
-		Vec compVec = GEOMETRY::Geom_UnitVec(proj_p2axis - p);//´Ë´¦ÎªÊı¾İµã´¹Ö±Ö¸ÏòÖáÏßµÄµ¥Î»ÏòÁ¿
+		Point proj_p2axis(GEOMETRY::Geom_PointProjLine(p, axis, pointOnAxis));	//æ•°æ®ç‚¹æŠ•å½±åˆ°è½´çº¿ä¸Š
+		Vec compVec = GEOMETRY::Geom_UnitVec(proj_p2axis - p);//æ­¤å¤„ä¸ºæ•°æ®ç‚¹å‚ç›´æŒ‡å‘è½´çº¿çš„å•ä½å‘é‡
 		Point np = p + compVec * PROBE_RADIUS;
 		std::vector<double> tmp({ np.x, np.y, np.z });
 		res.emplace_back(tmp);
@@ -99,7 +99,7 @@ std::vector<std::vector<double>> reconstructor::cylinderComp(std::vector<double>
 	return res;
 }
 
-// Ô­Àí¹«Ê½¼ûpreobe measure ppt
+// åŸç†å…¬å¼è§preobe measure ppt
 std::vector<std::vector<double>> reconstructor::coneComp(std::vector<double> iter_thetas) {
 	std::vector<std::vector<double>> res;
 	Point vertex = Point(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
@@ -117,6 +117,5 @@ std::vector<std::vector<double>> reconstructor::coneComp(std::vector<double> ite
 		std::vector<double> tmp({ np.x, np.y, np.z });
 		res.emplace_back(tmp);
 	}
-	return data;
-	//return res;
+	return res;
 }
