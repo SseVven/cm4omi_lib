@@ -60,11 +60,12 @@ std::vector<std::vector<double>> reconstructor::radiusCompensate(std::vector<dou
 }
 std::vector<std::vector<double>> reconstructor::planeComp(std::vector<double> iter_thetas) {
 	std::vector<std::vector<double>> res;
-	Point planeVec(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
+	Vec planeVec(iter_thetas[0], iter_thetas[1], iter_thetas[2]);
+	Point planePos(iter_thetas[3], iter_thetas[4], iter_thetas[5]);
 	for (auto& point : data) {
 		Point p(point[0], point[1], point[2]);
-		// 没写好，万一平面的法向量不指向探头方向怎么办（待改进）
-		Vec compVec = GEOMETRY::Geom_UnitVec(Point(0,0,0) - planeVec);
+		Point prj_p = GEOMETRY::Geom_PointProjPlane(p, planeVec, planePos);
+		Vec compVec = GEOMETRY::Geom_UnitVec(prj_p - p);
 		Point np = p + compVec * PROBE_RADIUS;
 		std::vector<double> tmp({ np.x, np.y, np.z });
 		res.emplace_back(tmp);
