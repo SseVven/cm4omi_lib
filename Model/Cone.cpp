@@ -21,8 +21,8 @@ Cone::~Cone()
 {
 }
 
-// ¶¥µãµÄÎ»ÖÃÆ«²î£¬ÖáÏòµÄ¼Ğ½Ç, ¶¥½ÇµÄ½Ç¶È²î
-// this ÎªÕæÊµµÄ²ÎÊı£¬modelÎªÔ¤²âµÄÄ£ĞÍ²ÎÊı£¬Êä³öÎª model - this
+// é¡¶ç‚¹çš„ä½ç½®åå·®ï¼Œè½´å‘çš„å¤¹è§’, é¡¶è§’çš„è§’åº¦å·®
+// this ä¸ºçœŸå®çš„å‚æ•°ï¼Œmodelä¸ºé¢„æµ‹çš„æ¨¡å‹å‚æ•°ï¼Œè¾“å‡ºä¸º model - this
 std::vector<double> Cone::modelError(const Cone& model) {
 	double vertexDistance = GEOMETRY::Geom_PosDistance(this->vertex, model.vertex);
 	double axisIncludeAngle = GEOMETRY::Geom_VecInnerAngle(this->axis, model.axis);
@@ -34,9 +34,9 @@ std::string Cone::modelErrorStr(const Cone& model) {
 	std::vector<double> data = this->modelError(model);
 	std::string vertexDistance = "vertex error:\t" + std::to_string(data[0]) + MODEL_LENGTH_UNIT + "\n";
 	std::string axisError = "axis error:\t" + std::to_string(data[1])
-		+ "(" + std::to_string(GEOMETRY::Geom_Rad2Degree(data[1])) + "¡ã)\n";
+		+ "(" + std::to_string(GEOMETRY::Geom_Rad2Degree(data[1])) + "Â°)\n";
 	std::string angleError = "angle error:\t" + std::to_string(data[2])
-		+ "(" + std::to_string(GEOMETRY::Geom_Rad2Degree(data[2])) + "¡ã)";
+		+ "(" + std::to_string(GEOMETRY::Geom_Rad2Degree(data[2])) + "Â°)";
 	return vertexDistance + axisError + angleError;
 }
 
