@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Model", "Model\Model.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpaceMath", "SpaceMath\SpaceMath.vcxproj", "{8D7D67D1-D7FB-4059-92DF-92C3FC3E3DC6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api", "api\api.vcxproj", "{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{8D7D67D1-D7FB-4059-92DF-92C3FC3E3DC6}.Release|x64.Build.0 = Release|x64
 		{8D7D67D1-D7FB-4059-92DF-92C3FC3E3DC6}.Release|x86.ActiveCfg = Release|Win32
 		{8D7D67D1-D7FB-4059-92DF-92C3FC3E3DC6}.Release|x86.Build.0 = Release|Win32
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Debug|x64.ActiveCfg = Debug|x64
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Debug|x64.Build.0 = Debug|x64
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Debug|x86.ActiveCfg = Debug|Win32
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Debug|x86.Build.0 = Debug|Win32
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Release|x64.ActiveCfg = Release|x64
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Release|x64.Build.0 = Release|x64
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Release|x86.ActiveCfg = Release|Win32
+		{9B3F10FD-5038-42C6-9EB5-9A1F1E20672D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

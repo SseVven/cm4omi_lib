@@ -10,7 +10,6 @@
 #endif
 
 constexpr auto MODEL_LENGTH_UNIT = "mm";
-constexpr auto PROBE_RADIUS = 2.5;
 
 class MODEL_LIBRARY_API Model
 {

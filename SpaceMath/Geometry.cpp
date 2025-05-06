@@ -54,12 +54,12 @@ Vec GEOMETRY::Geom_VerticeVec(const Vec& vec) {
 Point GEOMETRY::Geom_RotateAroundAxis(const Point& point, const Vec& vec, const Point& fp, double rad) {
 	if (point == fp) return point;
 	Point n_point = point - fp;
-	// ĞÂµÄ×ø±êÏµµÄ×ø±êÖá
+	// æ–°çš„åæ ‡ç³»çš„åæ ‡è½´
 	Vec axis = Geom_UnitVec(vec);
 	Vec newZ = axis;
 	Vec newX = Geom_VerticeVec(newZ);
 	Vec newY = newZ.cross(newX);
-	// ÔÚĞÂµÄ×ø±êÏµÖĞ±»Ğı×ª ÏòÁ¿×ø±ê
+	// åœ¨æ–°çš„åæ ‡ç³»ä¸­è¢«æ—‹è½¬ å‘é‡åæ ‡
 	double nX = Geom_VecLen(Geom_PointProjLine(n_point, newX, Vec(0, 0, 0)));
 	double nY = Geom_VecLen(Geom_PointProjLine(n_point, newY, Vec(0, 0, 0)));
 	double nZ = Geom_VecLen(Geom_PointProjLine(n_point, newZ, Vec(0, 0, 0)));
@@ -70,6 +70,45 @@ Point GEOMETRY::Geom_RotateAroundAxis(const Point& point, const Vec& vec, const 
 	double r = sqrt(nX * nX + nY * nY);
 	double nnx = r * cos(theta);
 	double nny = r * sin(theta);
-	// ×ª»»»ØÔ­×ø±êÏµ
+	// è½¬æ¢å›åŸåæ ‡ç³»
 	return fp + Geom_UnitVec(newX * nnx + newY * nny + newZ * nZ) * Geom_VecLen(n_point);
+}
+
+IMDA_postion_tol_s IMDA::get_position_tols_s(std::vector<Point> p_a, std::vector<Point> p_b) {
+	int n = p_a.size();
+	// make sure n != 0 and p_a.size() == p_b.size();
+	Vector data = Vector(n, 0);
+	double error_sum = 0;
+	for (int i = 0;i < n;i++) {
+		data[i] = GEOMETRY::Geom_PosDistance(p_a[i], p_b[i]);
+		error_sum += data[i];
+	}
+	IMDA_postion_tol_s res = {0,0,0};
+	res.max_error = *(std::max_element(data.begin(), data.end()));
+	res.min_error = *(std::min_element(data.begin(), data.end()));
+	double tmp = 0;
+	double error_avg = error_sum / n;
+	for (int i = 0;i < n;i++) {
+		tmp += pow(data[i] - error_avg, 2);
+	}
+	res.square_error = tmp / n;
+	return res;
+}
+
+IMDA_postion_tol_s IMDA::get_position_tols_s(std::vector<Vector> v_a, std::vector<Vector> v_b) {
+	std::vector<Point> p_a;
+	std::vector<Point> p_b;
+	for (Vector& vec : v_a)
+		p_a.push_back(Point(vec[0], vec[1], vec[2]));
+	for (Vector& vec : v_b)
+		p_b.push_back(Point(vec[0], vec[1], vec[2]));
+	return get_position_tols_s(p_a, p_b);
+}
+
+std::vector<std::vector<double>> IMDA::pos_set_trans(double* pts, int n) {
+	std::vector<std::vector<double>> res(n, std::vector<double>(3, 0));
+	for (int i = 0; i < n; i++)
+		for (int j = 0;j < 3;j++)
+			res[i][j] = pts[i * 3 + j];
+	return res;
 }

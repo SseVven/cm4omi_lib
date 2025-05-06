@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include "../api/IMDSurfAnalyze.h"
 #define	M_PI 3.14159265358979323846
 
 struct Vec
@@ -17,6 +18,7 @@ struct Vec
 	Vec(double x, double y, double z) :x(x), y(y), z(z) {}
 	Vec() :x(0), y(0), z(0) {}
 	Vec(const Vec& p) :x(p.x), y(p.y), z(p.z) {}
+	Vec(double p[3]) :x(p[0]), y(p[1]), z(p[2]) {}
 	bool operator= (const Vec& p)
 	{
 		this->x = p.x;
@@ -124,7 +126,7 @@ struct Matrix
 		this->data = newData;
 		return *this;
 	}
-	// ¾ØÕó³Ë·¨
+	// çŸ©é˜µä¹˜æ³•
 	Matrix matmul(const Matrix& mB) const {
 		auto A = this->data;
 		auto B = mB.data;
@@ -142,9 +144,9 @@ struct Matrix
 		}
 		return result;
 	}
-	// ¾ØÕóÓëÏòÁ¿³Ë·¨
-	Vector matvecmul(const Vector& v) {
-		auto A = this->data;
+	// çŸ©é˜µä¸å‘é‡ä¹˜æ³•
+	Vector matvecmul(const Vector& v) const {
+		std::vector<Vector> A = this->data;
 		size_t rows = A.size();
 		size_t cols = A[0].size();
 		Vector result(rows, 0.0);
@@ -156,23 +158,23 @@ struct Matrix
 		}
 		return result;
 	}
-	// ÏßĞÔ·½³Ì×éÇó½â
-	Vector solveLinearSystem(const Vector& b) {
+	// çº¿æ€§æ–¹ç¨‹ç»„æ±‚è§£
+	Vector solveLinearSystem(const Vector& b) const {
 		size_t n = this->data.size();
 		Matrix augmented = Matrix(*this);
 		for (size_t i = 0; i < n; ++i) {
 			augmented[i].push_back(b[i]);
 		}
 
-		// ¸ßË¹ÏûÔª
+		// é«˜æ–¯æ¶ˆå…ƒ
 		for (size_t i = 0; i < n; ++i) {
-			// ¹éÒ»»¯
+			// å½’ä¸€åŒ–
 			double pivot = augmented[i][i];
 			for (size_t j = i; j < n + 1; ++j) {
 				augmented[i][j] /= pivot;
 			}
 
-			// ÏûÔª
+			// æ¶ˆå…ƒ
 			for (size_t k = 0; k < n; ++k) {
 				if (k != i) {
 					double factor = augmented[k][i];
@@ -183,7 +185,7 @@ struct Matrix
 			}
 		}
 
-		// ÌáÈ¡½â
+		// æå–è§£
 		Vector x(n);
 		for (size_t i = 0; i < n; ++i) {
 			x[i] = augmented[i][n];
@@ -195,7 +197,7 @@ struct Matrix
 
 namespace GEOMETRY
 {
-	extern Space_Math_LIBRARY_API void PrintHello();  //²âÊÔº¯Êı
+	extern Space_Math_LIBRARY_API void PrintHello();  //æµ‹è¯•å‡½æ•°
 
 	extern Space_Math_LIBRARY_API double Geom_PosDistance(const Point& point, const Point&);
 
@@ -216,10 +218,18 @@ namespace GEOMETRY
 	inline double Geom_Rad2Degree(double rad) { return rad / M_PI * 180; }
 	inline double Geom_Degree2Rad(double deg) { return deg * M_PI / 180; }
 
-	// ¿Õ¼ä¼¸ºÎ±ä»»º¯Êı
+	// ç©ºé—´å‡ ä½•å˜æ¢å‡½æ•°
 	extern Space_Math_LIBRARY_API Vec Geom_VerticeVec(const Vec& vec);
 
 	extern Space_Math_LIBRARY_API Point Geom_RotateAroundAxis(const Point& point, const Vec&, const Point&, double);
 
 	//Vec Geom_Rotate
+}
+
+namespace IMDA {
+	extern Space_Math_LIBRARY_API IMDA_postion_tol_s get_position_tols_s(std::vector<Vector>, std::vector<Vector>);  // ä¸¤ç‚¹é›†è¯¯å·®
+	extern Space_Math_LIBRARY_API IMDA_postion_tol_s get_position_tols_s(std::vector<Point>, std::vector<Point>);  // ä¸¤ç‚¹é›†è¯¯å·®
+
+	extern Space_Math_LIBRARY_API std::vector<std::vector<double>> pos_set_trans(double*, int);  // ç‚¹é›†è½¬æ¢
+
 }
