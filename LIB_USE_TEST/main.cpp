@@ -32,8 +32,6 @@ std::vector<double> getRandomPoint(Point center, double radius) {
 
 int main() {
 	/*************************sphere***************************/
-	//Plane plane_standard(Vec(0, 0, 1), Point(20, 30, 40));
-	//Plane plane_actual(Vec(0.01293751, -0.0042886, 0.99990711), Point(20.00050656, 29.99811065, 40.00075931));
 	IMDA_sphere_input_s* sp_input = new IMDA_sphere_input_s;
 	IMDA_sphere_result_s* sp_result = new IMDA_sphere_result_s;
 	sp_input->position_count = 9;
@@ -50,30 +48,31 @@ int main() {
 		{10.         ,47.32050808 ,40.},
 		{10.         ,12.67949192 ,40.},
 		{40.         ,30.         ,40.        } };
-	std::vector<std::vector<double>> sp_data = {
-		{14.04142775, 40.32054988, 60.64109976},
-		{14.2287793,  20.00395253, 59.99209494},
-		{31.55368424, 30.        , 60.01156812},
-		{9.49345686, 48.19786654, 52.13191103},
-		{10.05898286, 12.78165323, 51.47889785},
-		{39.91558581, 30.        , 51.49826883},
-		{7.75785361, 51.20401954, 40.},
-		{8.51546474, 10.10820142, 40.},
-		{43.01383428, 30.       ,  40.} };
-	for (int i = 0;i < sp_input->position_count;i++) {
-		for (int j = 0;j < 3;j++) {
-			sp_oringin_pts[i * 3 + j] = sp_oringin_data[i][j];
-			sp_detect_pts[i * 3 + j] = sp_data[i][j];
-		}
-	}
+	std::vector<std::vector<double>> sp_data = { // 已经是补偿后的检测点坐标，需要改为探头的球心位置
+		{14.15727234, 40.11990116, 60.23980232},
+		{13.95074718, 19.52238677, 60.95522647},
+		{31.87789343, 30.,         60.57311491},
+		{10.0577468,  47.22048769, 51.48032513},
+		{9.44122804, 11.71167049, 52.19221967},
+		{40.45507169, 30.,         51.80974114},
+		{8.65351842, 49.65268259, 40.},
+		{7.83726354,  8.93352249, 40.},
+		{43.44640002, 30.,         40.} };
 	sp_input->oringin_pts = sp_oringin_pts;
 	sp_input->detect_pts = sp_detect_pts;
 	sp_input->detect_dir = sp_detect_dir;
 	sp_input->sphere_root[0] = 20;
 	sp_input->sphere_root[1] = 30;
 	sp_input->sphere_root[2] = 40;
-	sp_input->sphere_radius = 2.5;
+	sp_input->sphere_radius = 20;
 	sp_input->probe_radius = 2.5;
+	for (int i = 0;i < sp_input->position_count;i++) {
+		for (int j = 0;j < 3;j++) {
+			sp_oringin_pts[i * 3 + j] = sp_oringin_data[i][j];
+			sp_detect_pts[i * 3 + j] = sp_data[i][j];
+			sp_detect_dir[i * 3 + j] = sp_detect_pts[i * 3 + j] - sp_input->sphere_root[j];
+		}
+	}
 	std::cout << "\nstart\n";
 
 	IMDA_analyze_sphere(sp_input, sp_result);
@@ -171,7 +170,7 @@ int main() {
 		{35.961048856597365, 24.038951143402635, 60.0},
 		{42.581569663776335, 40.0, 60.0},
 		{35.93936928724671, 55.93936928724671, 60.0}};
-	for (int i = 0;i < pl_input->position_count;i++) {
+	for (int i = 0;i < cy_input->position_count;i++) {
 		for (int j = 0;j < 3;j++) {
 			cy_oringin_pts[i * 3 + j] = cy_data[i][j];
 			cy_detect_pts[i * 3 + j] = cy_data[i][j];
@@ -199,7 +198,71 @@ int main() {
 	std::cout << "cylindricity_tol: " << cy_result->cylindricity_tol << "\n";
 	std::cout << "\nend\n";
 	/*************************圆柱***************************/
+	/*************************圆柱孔***************************/
+	//Cylinder cylinder_standard(Point(20, 40, 30),Vec(0, 0, 1),20);
+	//Cylinder cylinder_actual(Point(20.00003046,39.99976466,30.00097144),Vec(2.78216323e-03,- 7.11886407e-04,9.99995876e-01), 19.998);
+	IMDA_cylinder_hole_input_s* cyh_input = new IMDA_cylinder_hole_input_s;
+	IMDA_cylinder_hole_result_s* cyh_result = new IMDA_cylinder_hole_result_s;
+	cyh_input->position_count = 9;
+	double* cyh_oringin_pts = new double[3 * cyh_input->position_count];
+	double* cyh_detect_pts = new double[3 * cyh_input->position_count];
+	double* cyh_detect_dir = new double[3 * cyh_input->position_count];
+	std::vector<std::vector<double>> cyh_origin_data = { // 正常使用应为标称圆柱孔的检测点位置
+		{35.926135098549544, 24.073864901450456, 40.0},
+		{42.525935356767704, 40.0, 40.0},
+		{35.91874358996205, 55.91874358996205, 40.0},
+		{35.94359534534834, 24.056404654651658, 50.0},
+		{42.55375363656873, 40.0, 50.0},
+		{35.92906603137219, 55.92906603137219, 50.0},
+		{35.961048856597365, 24.038951143402635, 60.0},
+		{42.581569663776335, 40.0, 60.0},
+		{35.93936928724671, 55.93936928724671, 60.0} };
+	std::vector<std::vector<double>> cyh_data = { // 目前是补偿后的测量点数据，正常使用应该改为 检测后的探头球心位置
+		{35.926135098549544, 24.073864901450456, 40.0},
+		{42.525935356767704, 40.0, 40.0},
+		{35.91874358996205, 55.91874358996205, 40.0},
+		{35.94359534534834, 24.056404654651658, 50.0},
+		{42.55375363656873, 40.0, 50.0},
+		{35.92906603137219, 55.92906603137219, 50.0},
+		{35.961048856597365, 24.038951143402635, 60.0},
+		{42.581569663776335, 40.0, 60.0},
+		{35.93936928724671, 55.93936928724671, 60.0} };
+	cyh_input->oringin_pts = cyh_oringin_pts;
+	cyh_input->detect_pts = cyh_detect_pts;
+	cyh_input->detect_dir = cyh_detect_dir;
+	cyh_input->cly_root[0] = 20;
+	cyh_input->cly_root[1] = 40;
+	cyh_input->cly_root[2] = 30;
+	cyh_input->cly_axis[0] = 0;
+	cyh_input->cly_axis[1] = 0;
+	cyh_input->cly_axis[2] = 1;
+	cyh_input->cly_radius = 20;
+	cyh_input->probe_radius = 2.5;
+	for (int i = 0;i < cyh_input->position_count;i++) {
+		for (int j = 0;j < 3;j++) {
+			cyh_oringin_pts[i * 3 + j] = cyh_origin_data[i][j];
+			cyh_detect_pts[i * 3 + j] = cyh_data[i][j];
+		}
+		// 目前给测量点法向的赋值为圆柱轴与测量点的连线方向
+		// 正式使用应改为实际的测量点法向数据
+		Point cyh_detect_pos(cyh_detect_pts[i * 3], cyh_detect_pts[i * 3] + 1, cyh_detect_pts[i * 3] + 2);
+		Point cyh_axis_point = GEOMETRY::Geom_PointProjLine(cyh_detect_pos, Vec(cyh_input->cly_axis), Point(cyh_input->cly_root));
+		Vec cyh_dir = cyh_axis_point - cyh_detect_pos;
+		cyh_detect_dir[3*i] = cyh_dir.x;
+		cyh_detect_dir[3*i+1] = cyh_dir.y;
+		cyh_detect_dir[3*i+2] = cyh_dir.z;
+	}
+	std::cout << "\nstart\n";
 
+	IMDA_analyze_cylinder_hole(cyh_input, cyh_result);
+	std::cout << "input_position_tol(max_error,min_error,square_error): " << cyh_input->position_tol.max_error << ", " << cyh_input->position_tol.min_error << ", " << cyh_input->position_tol.square_error << "\n";
+	std::cout << "result_position_tol(max_error,min_error,square_error): " << cyh_result->position_tol.max_error << ", " << cyh_result->position_tol.min_error << ", " << cyh_result->position_tol.square_error << "\n";
+	std::cout << "cly_root: " << cyh_result->cly_root[0] << ", " << cyh_result->cly_root[1] << ", " << cyh_result->cly_root[2] << "\n";
+	std::cout << "cly_axis: " << cyh_result->cly_axis[0] << ", " << cyh_result->cly_axis[1] << ", " << cyh_result->cly_axis[2] << "\n";
+	std::cout << "cly_radius: " << cyh_result->cly_radius << "\n";
+	std::cout << "cylindricity_tol: " << cyh_result->cylindricity_tol << "\n";
+	std::cout << "\nend\n";
+	/*************************圆柱孔***************************/
 	/*************************cone***************************/
 	//double s_height = 40;
 	//Vec s_vec = Vec(0, 0, 1);

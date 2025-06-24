@@ -91,6 +91,19 @@ struct IMDA_cylinder_result_s
 */
 extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder(IMDA_cylinder_input_s* input, IMDA_cylinder_result_s* result);
 
+//!圆柱孔输入参数
+typedef struct IMDA_cylinder_input_s IMDA_cylinder_hole_input_s;
+//!圆柱孔输入参数
+typedef struct IMDA_cylinder_result_s IMDA_cylinder_hole_result_s;
+/**
+@fn 圆柱内孔拟合接口
+@param input 输入参数,输入圆柱内孔数据与测点数据
+@param result 输出参数,输出拟合后的参数
+@retvl 返回错误信息
+@description 底层方法还是用的圆柱的拟合方式
+*/
+extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder_hole(IMDA_cylinder_hole_input_s* input, IMDA_cylinder_hole_result_s* result);
+
 //!圆锥输入参数
 struct IMDA_cone_input_s
 {
@@ -107,7 +120,6 @@ struct IMDA_cone_input_s
 
 	double probe_radius;
 };
-
 //!圆锥输出参数
 struct IMDA_cone_result_s
 {

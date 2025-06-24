@@ -15,7 +15,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_plane(IMDA_plane_input_s*
 	double probe_radius = input->probe_radius;
 	// 反向半径补偿
 	for (int i = 0;i < n;i++) {
-		Vec dir = Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2]) * probe_radius;
+		Vec dir = GEOMETRY::Geom_UnitVec(Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2])) * probe_radius;
 		Point new_p = Point(detect_pts[i][0], detect_pts[i][1], detect_pts[i][2]) - dir;
 		detect_pts[i][0] = new_p.x;
 		detect_pts[i][1] = new_p.y;
@@ -44,6 +44,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_plane(IMDA_plane_input_s*
 	result->flatness_tol = *(std::max_element(d_s.begin(), d_s.end())) - *(std::min_element(d_s.begin(), d_s.end()));
 	return 0;
 }
+
 extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_sphere(IMDA_sphere_input_s* input, IMDA_sphere_result_s* result) {
 	int n = input->position_count;
 	std::vector<Vector> oringin_pts = IMDA::pos_set_trans(input->oringin_pts, n);
@@ -52,7 +53,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_sphere(IMDA_sphere_input_
 	double probe_radius = input->probe_radius;
 	// 反向半径补偿
 	for (int i = 0;i < n;i++) {
-		Vec dir = Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2]) * probe_radius;
+		Vec dir = GEOMETRY::Geom_UnitVec(Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2])) * probe_radius;
 		Point new_p = Point(detect_pts[i][0], detect_pts[i][1], detect_pts[i][2]) - dir;
 		detect_pts[i][0] = new_p.x;
 		detect_pts[i][1] = new_p.y;
@@ -79,8 +80,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_sphere(IMDA_sphere_input_
 	result->concentricity_tol = *(std::max_element(d_s.begin(), d_s.end())) - *(std::min_element(d_s.begin(), d_s.end()));
 	return 0;
 }
-// 還差輸出的圆柱度
-// 輸入的dir，沒有用到
+
 extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder(IMDA_cylinder_input_s* input, IMDA_cylinder_result_s* result) {
 	int n = input->position_count;
 	std::vector<Vector> oringin_pts = IMDA::pos_set_trans(input->oringin_pts, n);
@@ -89,7 +89,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder(IMDA_cylinder_in
 	double probe_radius = input->probe_radius;
 	// 反向半径补偿
 	for (int i = 0;i < n;i++) {
-		Vec dir = Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2]) * probe_radius;
+		Vec dir = GEOMETRY::Geom_UnitVec(Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2])) * probe_radius;
 		Point new_p = Point(detect_pts[i][0], detect_pts[i][1], detect_pts[i][2]) - dir;
 		detect_pts[i][0] = new_p.x;
 		detect_pts[i][1] = new_p.y;
@@ -119,8 +119,12 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder(IMDA_cylinder_in
 	result->cylindricity_tol = *(std::max_element(d_s.begin(), d_s.end())) - *(std::min_element(d_s.begin(), d_s.end()));
 	return 0;
 }
-// 還差輸出的圆柱度
-// 輸入的dir，沒有用到
+
+extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cylinder_hole(IMDA_cylinder_hole_input_s* input, IMDA_cylinder_hole_result_s* result) {
+	int res = IMDA_analyze_cylinder(input, result);
+	return res;
+}
+
 extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cone(IMDA_cone_input_s* input, IMDA_cone_result_s* result) {
 	int n = input->position_count;
 	std::vector<Vector> oringin_pts = IMDA::pos_set_trans(input->oringin_pts, n);
@@ -129,7 +133,7 @@ extern "C" IMDSURFANALYZE_LIBRARY_API int IMDA_analyze_cone(IMDA_cone_input_s* i
 	double probe_radius = input->probe_radius;
 	// 反向半径补偿
 	for (int i = 0;i < n;i++) {
-		Vec dir = Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2]) * probe_radius;
+		Vec dir = GEOMETRY::Geom_UnitVec(Vec(detect_dir[i][0], detect_dir[i][1], detect_dir[i][2])) * probe_radius;
 		Point new_p = Point(detect_pts[i][0], detect_pts[i][1], detect_pts[i][2]) - dir;
 		detect_pts[i][0] = new_p.x;
 		detect_pts[i][1] = new_p.y;
